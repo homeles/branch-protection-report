@@ -45,12 +45,13 @@ axiosInstance.interceptors.response.use((response) => {
   if (remaining && remaining === '0') {
     const resetTime = response.headers['x-ratelimit-reset'];
     const currentTime = Math.floor(new Date().getTime() / 1000);
-    const delay = resetTime - currentTime;
+    let delay = resetTime - currentTime;
+    delay += 10;
 
     // Delay the next request
     return new Promise((resolve) => {
-      setTimeout(() => resolve(response), delay * 1000);
       console.log(`Rate limit reached, sleeping for ${delay} seconds...`);
+      setTimeout(() => resolve(response), delay * 1000);
     });
   }
 
